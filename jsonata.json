@@ -1,9 +1,19 @@
-$.data.groups.rules.alerts.{
-  "state": state,
-  "name": labels.alertname,
-  "application": labels.application,
-  "alert_type": labels.alert_type,
-  "job": labels.`compass-job`,
-  "severity": labels.severity,
-  "environment": labels.environment
-}
+(
+  $matches := $.data.groups.rules.alerts[
+    state = "Alerting" and
+    labels.application = "compass" and
+    labels.environment = "uat"
+  ];
+
+  $matches ? $matches.{
+    "name": labels.alertname,
+    "job": labels.`compass-job`,
+    "alert_type": labels.alert_type,
+    "severity": labels.severity
+  } : {
+    "name": null,
+    "job": null,
+    "alert_type": null,
+    "severity": null
+  }
+)
