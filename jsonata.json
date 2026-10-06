@@ -1,15 +1,78 @@
-(
-  $matches := $.data.groups.rules.alerts[
-    state = "firing" and
-    labels.application = "compass" and
-    labels.alert_type = "infrastructure"
-  ];
+SELECT
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%alb%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS alb_status,
 
-  $matches ? $matches.{
-    "name": labels.alertname,
-    "severity": labels.severity
-  } : {
-    "name": null,
-    "severity": null
-  }
-)
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%lambda%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS lambda_status,
+
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%s3%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS s3_status,
+
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%ecs%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS ecs_status,
+
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%rds%'
+             OR LOWER(name) LIKE '%aurora%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS rds_status
+
+FROM infra_alerts;
