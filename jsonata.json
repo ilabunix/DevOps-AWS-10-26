@@ -1,0 +1,15 @@
+(
+  $matches := $.data.groups.rules.alerts[
+    state = "firing" and
+    labels.application = "compass" and
+    labels.alert_type = "infrastructure"
+  ];
+
+  $matches ? $matches.{
+    "name": labels.alertname,
+    "severity": labels.severity
+  } : {
+    "name": null,
+    "severity": null
+  }
+)
