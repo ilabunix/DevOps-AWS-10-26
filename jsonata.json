@@ -1,78 +1,95 @@
+(
+  $matches := $.data.groups.rules.alerts[
+    state = "firing" and
+    labels.application = "compass" and
+    labels.alert_type = "application"
+  ];
+
+  $matches ? $matches.{
+    "name": labels.alertname,
+    "job": labels."compass-job",
+    "severity": labels.severity
+  } : {
+    "name": null,
+    "job": null,
+    "severity": null
+  }
+)
+
+
+-----
+
 SELECT
-  COALESCE(
-    MAX(
-      CASE
-        WHEN LOWER(name) LIKE '%alb%' THEN
-          CASE
-            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
-            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
-            ELSE 0
-          END
-        ELSE 0
-      END
-    ),
-    0
-  ) AS alb_status,
+  COALESCE(MAX(
+    CASE
+      WHEN LOWER(job) LIKE '%datalite%' THEN
+        CASE
+          WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+          WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+          ELSE 0
+        END
+      ELSE 0
+    END
+  ), 0) AS datalite_status,
 
-  COALESCE(
-    MAX(
-      CASE
-        WHEN LOWER(name) LIKE '%lambda%' THEN
-          CASE
-            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
-            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
-            ELSE 0
-          END
-        ELSE 0
-      END
-    ),
-    0
-  ) AS lambda_status,
+  COALESCE(MAX(
+    CASE
+      WHEN LOWER(job) LIKE '%easy%' THEN
+        CASE
+          WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+          WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+          ELSE 0
+        END
+      ELSE 0
+    END
+  ), 0) AS easy_status,
 
-  COALESCE(
-    MAX(
-      CASE
-        WHEN LOWER(name) LIKE '%s3%' THEN
-          CASE
-            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
-            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
-            ELSE 0
-          END
-        ELSE 0
-      END
-    ),
-    0
-  ) AS s3_status,
+  COALESCE(MAX(
+    CASE
+      WHEN LOWER(job) LIKE '%wpo%' THEN
+        CASE
+          WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+          WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+          ELSE 0
+        END
+      ELSE 0
+    END
+  ), 0) AS wpo_status,
 
-  COALESCE(
-    MAX(
-      CASE
-        WHEN LOWER(name) LIKE '%ecs%' THEN
-          CASE
-            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
-            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
-            ELSE 0
-          END
-        ELSE 0
-      END
-    ),
-    0
-  ) AS ecs_status,
+  COALESCE(MAX(
+    CASE
+      WHEN LOWER(job) LIKE '%dataplatform%' THEN
+        CASE
+          WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+          WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+          ELSE 0
+        END
+      ELSE 0
+    END
+  ), 0) AS dataplatform_status,
 
-  COALESCE(
-    MAX(
-      CASE
-        WHEN LOWER(name) LIKE '%rds%'
-             OR LOWER(name) LIKE '%aurora%' THEN
-          CASE
-            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
-            WHEN LOWER(severity) IN ('medium', 'low') THEN 1
-            ELSE 0
-          END
-        ELSE 0
-      END
-    ),
-    0
-  ) AS rds_status
+  COALESCE(MAX(
+    CASE
+      WHEN LOWER(job) LIKE '%flb%' THEN
+        CASE
+          WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+          WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+          ELSE 0
+        END
+      ELSE 0
+    END
+  ), 0) AS flb_status,
 
-FROM infra_alerts;
+  COALESCE(MAX(
+    CASE
+      WHEN LOWER(job) LIKE '%sfdm%' THEN
+        CASE
+          WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+          WHEN LOWER(severity) IN ('medium', 'low') THEN 1
+          ELSE 0
+        END
+      ELSE 0
+    END
+  ), 0) AS sfdm_status
+
+FROM app_alerts;
