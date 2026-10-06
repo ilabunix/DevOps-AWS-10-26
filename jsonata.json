@@ -7,11 +7,105 @@
 
   $matches ? $matches.{
     "name": labels.alertname,
-    "job": $lookup(labels, "compass-job"),
     "severity": labels.severity
   } : {
     "name": null,
-    "job": null,
     "severity": null
   }
 )
+
+
+SELECT
+
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%datalite%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('warning', 'medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS datalite_status,
+
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%easy%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('warning', 'medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS easy_status,
+
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%wpo%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('warning', 'medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS wpo_status,
+
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%dataplatform%'
+          OR LOWER(name) LIKE '%data platform%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('warning', 'medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS dataplatform_status,
+
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%flb%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('warning', 'medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS flb_status,
+
+  COALESCE(
+    MAX(
+      CASE
+        WHEN LOWER(name) LIKE '%sfdm%' THEN
+          CASE
+            WHEN LOWER(severity) IN ('critical', 'high') THEN 2
+            WHEN LOWER(severity) IN ('warning', 'medium', 'low') THEN 1
+            ELSE 0
+          END
+        ELSE 0
+      END
+    ),
+    0
+  ) AS sfdm_status
+
+FROM app_alerts;
