@@ -1,15 +1,18 @@
-COALESCE(
-  MAX(
-    CASE
-      WHEN LOWER(name) LIKE '%acm%'
-        OR LOWER(name) LIKE '%certificate%' THEN
-        CASE
-          WHEN LOWER(severity) = 'critical' THEN 2
-          WHEN LOWER(severity) = 'warning' THEN 1
-          ELSE 0
-        END
-      ELSE 0
-    END
-  ),
-  0
-) AS acm_status
+(
+  $matches := $.data.groups.rules.alerts[
+    state = "Alerting" and
+    labels.application = "compass"
+  ];
+
+  $matches ? $matches.{
+    "name": labels.alertname,
+    "job": labels.`compass-job`,
+    "alert_type": labels.alert_type,
+    "severity": labels.severity
+  } : {
+    "name": null,
+    "job": null,
+    "alert_type": null,
+    "severity": null
+  }
+)
