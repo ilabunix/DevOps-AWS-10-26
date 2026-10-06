@@ -1,0 +1,31 @@
+Review my Claude Code workspace configuration in READ-ONLY mode.
+
+Do not modify, rename, move, create, or delete anything.
+
+Verify the following:
+
+1. The root CLAUDE.md is loaded and summarize its operating model.
+2. List all custom agents you can discover.
+3. Confirm PROJECT_REGISTRY.md remains the canonical project registry.
+4. Confirm project-historian knows to checkpoint the current project before switching projects.
+5. Confirm ISSUE_INVENTORY.md is the cross-project issue index.
+6. Confirm app-knowledgebase is read-only and local-documentation-first.
+7. Confirm software-engineer is available for development/SWE work.
+8. Confirm AWS CLI and AWS PowerShell commands are manual-only.
+9. Confirm terraform plan/apply/destroy are manual-only/blocked.
+10. Confirm git add, commit, and push are manual-only/blocked.
+11. Confirm internet/search/download/remote Git/package installs require explicit approval.
+12. Confirm specialist agents hand off evidence, changes, validation, approval requirements, and open questions back to the main agent.
+13. Confirm the main agent is the canonical task-state owner and resolves conflicts between agents.
+14. Confirm project changes are checkpointed with files changed, validation, manual actions, and exact resume point.
+15. Confirm the context-efficiency rule prevents unnecessary agents and unnecessary project-history loading.
+
+Do not execute any AWS, Terraform plan/apply, Git mutation, internet, download, or package-install command.
+
+Return:
+- Configuration status
+- Agents found
+- Safety controls found
+- Project-memory controls found
+- Any missing/broken configuration
+- Any recommended fixes
