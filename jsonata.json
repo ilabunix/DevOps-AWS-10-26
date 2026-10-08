@@ -5,85 +5,21 @@
     labels.environment = "uat"
   ];
 
+  $critical := $alerts[
+    $lowercase(labels.severity) = "critical" or
+    $lowercase(labels.severity) = "high"
+  ];
+
+  $warning := $alerts[
+    $lowercase(labels.severity) = "warning" or
+    $lowercase(labels.severity) = "medium" or
+    $lowercase(labels.severity) = "low"
+  ];
+
   {
-    "datalite_status":
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "datalite") and
-        ($lowercase(labels.severity) = "critical" or
-         $lowercase(labels.severity) = "high")
-      ]) > 0 ? 2 :
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "datalite") and
-        ($lowercase(labels.severity) = "warning" or
-         $lowercase(labels.severity) = "medium" or
-         $lowercase(labels.severity) = "low")
-      ]) > 0 ? 1 : 0,
-
-    "easy_status":
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "easy") and
-        ($lowercase(labels.severity) = "critical" or
-         $lowercase(labels.severity) = "high")
-      ]) > 0 ? 2 :
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "easy") and
-        ($lowercase(labels.severity) = "warning" or
-         $lowercase(labels.severity) = "medium" or
-         $lowercase(labels.severity) = "low")
-      ]) > 0 ? 1 : 0,
-
-    "wpo_status":
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "wpo") and
-        ($lowercase(labels.severity) = "critical" or
-         $lowercase(labels.severity) = "high")
-      ]) > 0 ? 2 :
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "wpo") and
-        ($lowercase(labels.severity) = "warning" or
-         $lowercase(labels.severity) = "medium" or
-         $lowercase(labels.severity) = "low")
-      ]) > 0 ? 1 : 0,
-
-    "dataplatform_status":
-      $count($alerts[
-        ($contains($lowercase(labels.alertname), "dataplatform") or
-         $contains($lowercase(labels.alertname), "data platform")) and
-        ($lowercase(labels.severity) = "critical" or
-         $lowercase(labels.severity) = "high")
-      ]) > 0 ? 2 :
-      $count($alerts[
-        ($contains($lowercase(labels.alertname), "dataplatform") or
-         $contains($lowercase(labels.alertname), "data platform")) and
-        ($lowercase(labels.severity) = "warning" or
-         $lowercase(labels.severity) = "medium" or
-         $lowercase(labels.severity) = "low")
-      ]) > 0 ? 1 : 0,
-
-    "flb_status":
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "flb") and
-        ($lowercase(labels.severity) = "critical" or
-         $lowercase(labels.severity) = "high")
-      ]) > 0 ? 2 :
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "flb") and
-        ($lowercase(labels.severity) = "warning" or
-         $lowercase(labels.severity) = "medium" or
-         $lowercase(labels.severity) = "low")
-      ]) > 0 ? 1 : 0,
-
-    "sfdm_status":
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "sfdm") and
-        ($lowercase(labels.severity) = "critical" or
-         $lowercase(labels.severity) = "high")
-      ]) > 0 ? 2 :
-      $count($alerts[
-        $contains($lowercase(labels.alertname), "sfdm") and
-        ($lowercase(labels.severity) = "warning" or
-         $lowercase(labels.severity) = "medium" or
-         $lowercase(labels.severity) = "low")
-      ]) > 0 ? 1 : 0
+    "compass_alert_status":
+      $count($critical) > 0 ? 2 :
+      $count($warning) > 0 ? 1 :
+      0
   }
 )
