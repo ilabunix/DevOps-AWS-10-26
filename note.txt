@@ -1,9 +1,7 @@
-We added an Auto Scaling Group for TaskTop DEV using a launch template. The ASG is failing to launch instances with:
+1. Keycloak management port 9000 exposure — Remediated
+The EC2 security group rule for TCP/9000 was previously allowing access from the broader VPC CIDR. Since port 9000 is only required for the ALB health check to the Keycloak management endpoint, the rule has been updated to allow TCP/9000 only from the dedicated TaskTop ALB security group. The Keycloak target group remains healthy after the change.
 
-Client.InvalidKMSKey.InvalidState
+2. EC2 outbound egress 0.0.0.0/0 — Existing design / compensating network controls
+The EC2 security group currently allows broad outbound egress. The TaskTop instance is deployed in an application subnet whose default route is through a Transit Gateway rather than directly to an Internet Gateway, so the SG rule by itself does not provide unrestricted Internet access. Actual outbound reachability is still subject to downstream routing and network controls.
 
-The launch template uses the centrally managed CFS gold AMI. That AMI’s root snapshot is encrypted with a KMS key owned/managed by the CFS image team, and our account does not have direct permission to that KMS key.
-
-A direct EC2 launch from that AMI has worked previously because the interactive/user launch path had sufficient permission or an existing KMS grant. The ASG launch path is different because Auto Scaling uses its service-linked role and must also be able to use the source AMI snapshot’s KMS key.
-
-Important: simply specifying our own KMS key in the launch template for the new EBS volume is not sufficient by itself. AWS still needs permission to read/decrypt the source AMI snapshot encrypted with the CFS KMS key before creating the new root volume.
+TaskTop also relies on multiple AWS and internal application dependencies, so the current egress configuration avoids introducing unnecessary connectivity issues while those dependencies remain in place. 
