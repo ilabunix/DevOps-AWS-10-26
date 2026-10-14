@@ -1,0 +1,9 @@
+We added an Auto Scaling Group for TaskTop DEV using a launch template. The ASG is failing to launch instances with:
+
+Client.InvalidKMSKey.InvalidState
+
+The launch template uses the centrally managed CFS gold AMI. That AMI’s root snapshot is encrypted with a KMS key owned/managed by the CFS image team, and our account does not have direct permission to that KMS key.
+
+A direct EC2 launch from that AMI has worked previously because the interactive/user launch path had sufficient permission or an existing KMS grant. The ASG launch path is different because Auto Scaling uses its service-linked role and must also be able to use the source AMI snapshot’s KMS key.
+
+Important: simply specifying our own KMS key in the launch template for the new EBS volume is not sufficient by itself. AWS still needs permission to read/decrypt the source AMI snapshot encrypted with the CFS KMS key before creating the new root volume.
