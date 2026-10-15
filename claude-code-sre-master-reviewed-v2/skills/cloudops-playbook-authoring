@@ -1,0 +1,150 @@
+---
+name: cloudops-playbook-authoring
+description: Create, update, or review Cloud Operations playbooks and runbooks for alerts, incidents, scheduled jobs, failure scenarios, and operational procedures. Use the approved local Confluence-export template as the authoritative format whenever available.
+---
+
+# CloudOps Playbook Authoring
+
+Use this skill when the user asks to create, update, or review Cloud Operations playbooks/runbooks, especially alert-response procedures, failure scenarios, scheduled jobs, and operational support documentation.
+
+The user should not need to explicitly name this skill.
+
+## Authoritative Template
+
+If an approved Confluence export/template exists locally, it is the source of truth for section names, order, tables, terminology, required fields, and formatting.
+
+Look first under this skill's `references/` directory or the relevant project's local documentation.
+
+If no approved template is available:
+1. state that the authoritative template is unavailable
+2. use `templates/fallback-cloudops-playbook-template.md`
+3. clearly label the output as fallback-format content
+
+## Modes
+
+### CREATE
+Create a new playbook/runbook from available application, alert, job, architecture, monitoring, and operational information.
+
+### UPDATE
+Update an existing playbook/runbook while preserving unaffected content and existing structure.
+
+### REVIEW
+Compare an existing document against the approved template and identify missing sections, operational gaps, stale/conflicting information, unclear escalation, missing recovery/validation, and missing links/references.
+
+## Source Priority
+
+Use information in this order:
+1. approved Confluence template
+2. existing application playbook/runbook
+3. current project documentation
+4. local application knowledgebase
+5. alert definition / monitoring query
+6. user-provided logs, screenshots, DB output, or operational details
+7. clearly labeled engineering hypothesis
+
+Never present a hypothesis as documented procedure.
+
+## Agent Collaboration
+
+Use specialists only when they materially improve accuracy:
+- `app-knowledgebase` for documented application procedures, architecture, known issues and nuances
+- `observability-engineer` for Grafana/CloudWatch alerts, logs, metrics and query interpretation
+- `incident-investigator` for incident-derived evidence/failure patterns
+- `terraform-engineer` when alerting/playbook content is IaC-managed
+- `network-engineer` for network scenarios
+- `database-engineer` for database scenarios
+- `software-engineer` for application/code behavior
+- `validation-reviewer` for high-impact completeness review
+
+Avoid over-agenting.
+
+## Playbook vs Runbook
+
+Follow organizational terminology first.
+
+If no local definition exists:
+- Playbook = scenario-oriented response guidance
+- Runbook = repeatable procedural steps for a specific operational task
+
+## Alert-Driven Playbook Workflow
+
+Establish when relevant:
+1. Alert name
+2. Application/service
+3. Environment(s)
+4. Severity/priority
+5. Alert source
+6. Query/metric/log condition
+7. Evaluation window
+8. What the alert means
+9. Expected impact
+10. Initial checks
+11. Dashboard/log/query locations
+12. Known failure scenarios
+13. CloudOps actions
+14. Actions CloudOps must NOT perform
+15. Escalation criteria
+16. Escalation owner/team
+17. Recovery/steady-state validation
+18. Alert resolution expectations
+19. References
+20. Open gaps requiring application-team input
+
+Only map items supported by the approved template.
+
+## Procedure Quality Rules
+
+Operational steps must be ordered, actionable, environment-aware, safe, specific enough for on-call use, and clear about expected results and failure branches.
+
+Prefer:
+1. Check
+2. Expected Result
+3. If Not Expected
+
+Avoid vague guidance like "check logs" or "investigate" when a source, query, dashboard, owner, or condition can be identified.
+
+## Command Safety
+
+Follow the root `CLAUDE.md`.
+
+Do not execute blocked/manual-only commands. If documenting AWS/Terraform/Git/database/production-impacting commands, keep them documentation-only and identify target, expected output, risk, and approval/escalation requirements where relevant.
+
+Never claim a documented command was executed.
+
+## Missing Information
+
+Never invent thresholds, log patterns, owners, contacts, URLs, account IDs, regions, recovery actions, restart procedures, queries, or expected outputs.
+
+Use:
+`TBD - requires confirmation from <team/owner>`
+
+## Existing Document Preservation
+
+When updating:
+- preserve unchanged sections
+- preserve terminology and links
+- do not reorder unless required by approved template
+- do not silently remove application-team content
+- flag stale/conflicting content before replacing it
+
+## Review Checklist
+
+Verify:
+- approved template followed
+- application/environment correct
+- trigger accurately described
+- steps actionable
+- expected results included
+- failure branches included
+- CloudOps scope clear
+- escalation clear
+- recovery/validation clear
+- assumptions labeled
+- no secrets/sensitive data exposed
+- references preserved
+- TBDs explicit
+- terminology consistent
+
+## Project Continuity
+
+After meaningful creation/update work, the primary agent should invoke `project-historian` to record the document created/updated, scenario covered, decisions, remaining TBDs, validation status, and exact next step.
