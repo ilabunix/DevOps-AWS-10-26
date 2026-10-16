@@ -1,7 +1,1 @@
-1. Keycloak management port 9000 exposure — Remediated
-The EC2 security group rule for TCP/9000 was previously allowing access from the broader VPC CIDR. Since port 9000 is only required for the ALB health check to the Keycloak management endpoint, the rule has been updated to allow TCP/9000 only from the dedicated TaskTop ALB security group. The Keycloak target group remains healthy after the change.
-
-2. EC2 outbound egress 0.0.0.0/0 — Existing design / compensating network controls
-The EC2 security group currently allows broad outbound egress. The TaskTop instance is deployed in an application subnet whose default route is through a Transit Gateway rather than directly to an Internet Gateway, so the SG rule by itself does not provide unrestricted Internet access. Actual outbound reachability is still subject to downstream routing and network controls.
-
-TaskTop also relies on multiple AWS and internal application dependencies, so the current egress configuration avoids introducing unnecessary connectivity issues while those dependencies remain in place. 
+Since the public domain is now on WordPress VIP and the legacy CloudFront distribution is disabled, there is currently no production traffic hitting the AWS Bloomreach environment. I can renew the certificate in the legacy environment as well if there is a need to re-enable it before decommissioning, but otherwise there is limited value in doing that as part of this weekend’s activity since the environment is no longer serving production traffic. Other than renewing the certificate itself, there would not be much meaningful validation we could perform against the legacy path while it remains disabled.
