@@ -1,1 +1,11 @@
-Since the public domain is now on WordPress VIP and the legacy CloudFront distribution is disabled, there is currently no production traffic hitting the AWS Bloomreach environment. I can renew the certificate in the legacy environment as well if there is a need to re-enable it before decommissioning, but otherwise there is limited value in doing that as part of this weekend’s activity since the environment is no longer serving production traffic. Other than renewing the certificate itself, there would not be much meaningful validation we could perform against the legacy path while it remains disabled.
+Grafana monitoring is primarily CloudWatch metrics-based rather than log-based. We’re monitoring the EC2/ALB/RDS infrastructure metrics and target-group health, including unhealthy host count for the TaskTop and Keycloak backend health checks.
+
+For CloudWatch Logs, we currently have:
+
+* /tasktop-prod, which contains the EC2 user-data and ssm-data streams — mainly instance startup/bootstrap, TaskTop service startup, firewalld configuration, etc.
+* the RDS PostgreSQL log group
+* SSM Session Manager shell/session logs
+
+We’re not currently ingesting the detailed TaskTop application/operational logs into CloudWatch for Grafana alerting. ADTs had previously indicated that those application-level logs were not something TechOps needed to alert on, since they are more related to TaskTop operations/activity.
+
+So the actionable TaskTop alerting today is mainly infrastructure metrics and backend health rather than application log-pattern alerts.
