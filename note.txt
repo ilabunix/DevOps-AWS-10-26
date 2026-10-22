@@ -1,0 +1,102 @@
+I’d like to share several observations from the TechOps perspective regarding the operational challenges encountered throughout the Compass project, along with opportunities to improve future application delivery and support.
+
+1. Application Quality and Deployment Readiness
+
+We encountered recurring challenges with application deployments, database migration scripts, and environment readiness that required additional troubleshooting and coordination.
+
+* DMS and database migration script errors contributed to deployment delays and extended troubleshooting.
+* Some scripts and application changes required additional corrections after deployment.
+* Insufficient validation before UAT and production deployments created avoidable operational dependencies.
+* Deployment scheduling and readiness were sometimes affected by missing scripts, unresolved issues, or incomplete UAT validation.
+
+Recommendation: Establish stronger pre-deployment validation, including script reviews, successful UAT execution, documented dependencies, and clearly defined deployment readiness criteria.
+
+2. Access Management and Change Governance
+
+There were instances where database scripts provisioned elevated access, including administrative privileges, without following the expected access approval process.
+
+Additionally, administrative functions within the Compass UI were sometimes managed through direct SQL scripts rather than established application administration or access management workflows.
+
+Recommendation: Ensure database permissions, administrative access changes, and deployment activities follow approved access management and change control processes, with appropriate security review and auditability.
+
+3. Monitoring, Alerting, and Operational Visibility
+
+Application-level monitoring and alerting were not fully established as part of the initial delivery.
+
+TechOps took the initiative to analyze ECS application logs, understand job execution flows, identify error and exception patterns, and develop Grafana dashboards and application-specific alerts.
+
+Additional challenges included:
+
+* Limited upfront visibility into application-specific failure scenarios.
+* Incomplete definitions of job execution statuses and their business criticality.
+* Unclear severity classifications and escalation requirements for certain application alerts.
+* Delays in establishing synthetic monitoring and application health visibility.
+
+Recommendation: Development and business teams should provide documented job statuses, expected behaviors, critical failure scenarios, business impact, and monitoring requirements as part of the application handoff. TechOps can then implement and validate monitoring against those requirements.
+
+4. Documentation, Runbooks, and Operational Knowledge Transfer
+
+While application documentation and training sessions were provided, operational details were sometimes incomplete, outdated, or insufficient for incident troubleshooting.
+
+* Job-specific errors, exceptions, and recovery procedures were not always clearly documented.
+* TechOps had to correlate documentation with actual application logs to identify actionable failure patterns.
+* Deployment scope, impacted components, and validation requirements were not always consistently documented.
+* Tabletop exercises sometimes focused more on presentations than practical incident walkthroughs.
+
+Recommendation: Establish standardized, validated application runbooks and deployment documentation covering operational procedures, known failure scenarios, recovery actions, escalation paths, and deployment scope.
+
+5. UAT Environment Management and Testing Practices
+
+There were concerns regarding how UAT environments were being utilized.
+
+In some instances, UAT was treated similarly to a development environment, with ongoing changes and testing activities affecting stability and readiness.
+
+There were also questions regarding whether separate environments were consistently being used for their intended purposes.
+
+Recommendation: Establish clear environment usage policies, with development and initial troubleshooting performed in designated development environments. UAT should support controlled integration, business validation, and release readiness testing.
+
+6. Incident Response, Backout, and Recovery Validation
+
+Operational readiness around incident response and deployment recovery requires additional alignment.
+
+* Backout and failover testing expectations were not always clearly established.
+* Post-backout validation sometimes relied primarily on smoke testing without sufficient confirmation of application functionality.
+* Application-level incident ownership and escalation procedures needed additional clarification.
+* Alert severity and business impact were not always clearly defined.
+
+Recommendation: Define minimum incident response, backout, and recovery validation requirements, including application-owner confirmation and clearly documented recovery procedures.
+
+7. Cross-Team Collaboration and Development Support
+
+TechOps encountered situations where application monitoring, documentation, and operational support requirements required substantial additional investigation.
+
+While the development team provided application documentation and participated in knowledge-transfer sessions, some operational requirements were identified and implemented primarily through TechOps analysis.
+
+There were also instances where requirements or priorities changed during implementation, resulting in rework.
+
+Recommendation: Improve early engagement between Development, TechOps, QA, and Program Management to ensure that operational dependencies, monitoring requirements, deployment expectations, and ownership are clearly established before production readiness reviews.
+
+8. Communication, Ownership, and Business Alignment
+
+Clearer communication and ownership are needed across application delivery and operational support.
+
+Areas requiring improvement include:
+
+* Defining business criticality and expected outcomes for application jobs.
+* Establishing clear ownership for application issues and operational escalations.
+* Communicating deployment scope, release dependencies, and changes consistently.
+* Finalizing monitoring and operational requirements before implementation wherever possible.
+
+Recommendation: Establish a shared operational readiness checklist with clearly defined responsibilities, acceptance criteria, and sign-off from Development, QA, TechOps, and relevant business stakeholders.
+
+⸻
+
+Overall Feedback
+
+TechOps has made significant progress in establishing the operational visibility and monitoring capabilities required to support Compass, including application-specific dashboards, alerting, log analysis, and support procedures.
+
+However, many of these capabilities required additional investigation and coordination because operational requirements were not always fully defined during the earlier phases of application delivery.
+
+The primary opportunity for improvement is to strengthen collaboration, documentation, application validation, environment governance, and operational readiness earlier in the delivery lifecycle.
+
+Our objective is to ensure future releases are not only functionally complete but also stable, secure, adequately tested, monitored, documented, and ready for ongoing production support.
