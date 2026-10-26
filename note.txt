@@ -1,5 +1,36 @@
-Before changing group_by, identify any current alert rules that can generate multiple simultaneous alert instances with the same alertname/application/environment but different resource, job, or other identifying labels.
+The audit confirms the narrower grouping is safe for the current alert catalog.
 
-Confirm that the custom message template iterates over .Alerts and clearly renders each grouped alert instance so no failure details are hidden.
+Proceed with:
 
-Report any alerts where reducing group_by could cause operationally distinct failures to be bundled in a way that would be undesirable.
+group_by = [
+  "alertname",
+  "application",
+  "environment"
+]
+
+Apply it consistently to the applicable root/nested notification policies.
+
+Do not change:
+- matchers
+- contact points
+- group_wait
+- group_interval
+- repeat_interval
+- routing
+- alert rules
+
+Also make the previously requested presentation-only refinements:
+- remove excessive whitespace between body sections
+- use a clearer separator between multiple grouped alert instances
+- move Silence Alert to the bottom of ACTIONS
+- keep Silence firing-only
+
+Do NOT address the sample_message/job mismatch issue in this change.
+Track that as a separate follow-up because it affects alert content semantics.
+
+Before applying, show me:
+1. exact group_by diffs
+2. exact template whitespace/separator diff
+3. Terraform plan
+4. confirmation that DEV/TEST/UAT/PROD still route to the same contact points
+5. confirmation that no notification policy branches are added or removed
